@@ -28,3 +28,19 @@ The GitHub action isn't actually deploying anything. I just needs to call a Lamb
 5. Deploy
 6. Store the secret in GitHub
 7. Test: Commit and Verify
+
+It worked 🎉
+I enhanced the action to pass github details as well:
+
+```yml
+steps:
+  - name: Call endpoint
+    run: |
+      curl -X POST -H "Content-Type: application/json" \
+      -d '{
+        "ref": "${{ github.ref }}", 
+        "repo": "${{ github.repository }}", 
+        "commit": "${{ github.event.after }}"
+        }' \
+       ${{ secrets.ENDPOINT }}
+```

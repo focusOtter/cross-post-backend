@@ -63,3 +63,5 @@ I was curious how to get the previous commit, but [GitHub has a `^` utility](htt
 > 🗒️ Note: The `^` can be tacked on multiple times. So `^^^` means get me the commit sha from 3 commits ago. If this feels tedious (getting 10 commit prior for example, you can do `~10`.)
 
 So it looks like I'll need the [Octokit package](https://www.npmjs.com/package/octokit). I'll use the REST version.
+
+So to put it together, it'll be getting the secret from secrets manaager, then putting that in the Octokit library, from there, calling the `comparCommits` endpoint and manipulating the result to get the file I need

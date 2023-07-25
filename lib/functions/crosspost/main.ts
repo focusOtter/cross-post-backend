@@ -43,6 +43,20 @@ exports.handler = async (event: any) => {
 		}
 
 		console.log('Commited files: ', committedFiles)
+
+		async function getFileContent() {
+			try {
+				const getContentReponse = await octokit.repos.getContent({
+					owner,
+					repo,
+					path: committedFiles[0].filename,
+				})
+
+				console.log('Get content response: ', getContentReponse)
+			} catch (err) {
+				console.error(err)
+			}
+		}
 	} catch (err: any) {
 		console.log(err, err.stack) // an error occurred
 	}

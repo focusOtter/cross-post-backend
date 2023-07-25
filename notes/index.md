@@ -88,3 +88,38 @@ const octokit = new Octokit({
 	},
 })
 ```
+
+This worked 🎉 and gave me the following:
+
+````txt
+2023-07-25T16:48:39.632Z	e86750dd-1e09-4ed5-a8ae-656b31971c4d	INFO	Commited files:  [
+  {
+    sha: 'f186aae60370547b61ee77361b54c10797f95222',
+    filename: 'notes/index.md',
+    status: 'modified',
+    additions: 11,
+    deletions: 0,
+    changes: 11,
+    blob_url: 'https://github.com/focusOtter/cross-post-backend/blob/f775078703edd39505b9a2ffed992dcfc354c80b/notes%2Findex.md',
+    raw_url: 'https://github.com/focusOtter/cross-post-backend/raw/f775078703edd39505b9a2ffed992dcfc354c80b/notes%2Findex.md',
+    contents_url: 'https://api.github.com/repos/focusOtter/cross-post-backend/contents/notes%2Findex.md?ref=f775078703edd39505b9a2ffed992dcfc354c80b',
+    patch: '@@ -77,3 +77,14 @@ const event = JSON.parse(eventString)\n' +
+      ' redeployed (I should really enable watch mode for this stuff lol)\n' +
+      ' \n' +
+      ' Oh wait. `event` is an object, but `event.body` is a string 🤦‍♂️\n' +
+      '+\n' +
+      "+Oh interesting. It looks like Octokit expect `fetch` to be available. In my node 16 Lambda, I'm not doing that, so I import `node-fetch` and add it:\n" +
+      '+\n' +
+      '+```ts\n' +
+      '+const octokit = new Octokit({\n' +
+      '+\tauth: secretValue,\n' +
+      '+\trequest: {\n' +
+      '+\t\tfetch: fetch,\n' +
+      '+\t},\n' +
+      '+})\n' +
+      '+```'
+  }
+]
+````
+
+> 🗒️ Note: At this point, I've used 88mb of my 128mb. With a cold start, this is taking 1209ms with a 568ms init Duration.

@@ -57,6 +57,8 @@ exports.handler = async (event: any) => {
 				console.error(err)
 			}
 		}
+
+		getFileContent()
 	} catch (err: any) {
 		console.log(err, err.stack) // an error occurred
 	}

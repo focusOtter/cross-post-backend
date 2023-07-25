@@ -1,5 +1,6 @@
 import * as AWS from 'aws-sdk'
 import { Octokit } from '@octokit/rest'
+import fetch from 'node-fetch'
 
 const secretsmanager = new AWS.SecretsManager()
 
@@ -17,6 +18,9 @@ exports.handler = async (event: any) => {
 
 		const octokit = new Octokit({
 			auth: secretValue,
+			request: {
+				fetch: fetch,
+			},
 		})
 
 		const owner = eventBody.repo.split('/')[0] // Get the owner from the repo name

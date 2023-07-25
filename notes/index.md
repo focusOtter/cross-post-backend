@@ -77,3 +77,14 @@ const event = JSON.parse(eventString)
 redeployed (I should really enable watch mode for this stuff lol)
 
 Oh wait. `event` is an object, but `event.body` is a string 🤦‍♂️
+
+Oh interesting. It looks like Octokit expect `fetch` to be available. In my node 16 Lambda, I'm not doing that, so I import `node-fetch` and add it:
+
+```ts
+const octokit = new Octokit({
+	auth: secretValue,
+	request: {
+		fetch: fetch,
+	},
+})
+```

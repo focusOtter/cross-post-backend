@@ -3,8 +3,9 @@ import { Octokit } from '@octokit/rest'
 
 const secretsmanager = new AWS.SecretsManager()
 
-exports.handler = async (eventString: any) => {
-	const event = JSON.parse(eventString)
+exports.handler = async (event: any) => {
+	const eventBody = JSON.parse(event.body)
+	console.log('Processing eventBody: ', eventBody)
 
 	const params = {
 		SecretId: 'github-token',
@@ -18,9 +19,9 @@ exports.handler = async (eventString: any) => {
 			auth: secretValue,
 		})
 
-		const owner = event.body.repo.split('/')[0] // Get the owner from the repo name
-		const repo = event.body.repo.split('/')[1] // Get the repo from the repo name
-		const commit = event.body.commit // Get the commit SHA
+		const owner = eventBody.repo.split('/')[0] // Get the owner from the repo name
+		const repo = eventBody.repo.split('/')[1] // Get the repo from the repo name
+		const commit = eventBody.commit // Get the commit SHA
 
 		let committedFiles: any[] = []
 
@@ -38,8 +39,6 @@ exports.handler = async (eventString: any) => {
 		}
 
 		console.log('Commited files: ', committedFiles)
-
-		console.log('Processing event: ', event)
 	} catch (err: any) {
 		console.log(err, err.stack) // an error occurred
 	}

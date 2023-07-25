@@ -75,3 +75,5 @@ const event = JSON.parse(eventString)
 ```
 
 redeployed (I should really enable watch mode for this stuff lol)
+
+Oh wait. `event` is an object, but `event.body` is a string 🤦‍♂️

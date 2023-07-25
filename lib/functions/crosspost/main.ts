@@ -3,7 +3,9 @@ import { Octokit } from '@octokit/rest'
 
 const secretsmanager = new AWS.SecretsManager()
 
-exports.handler = async (event: any) => {
+exports.handler = async (eventString: any) => {
+	const event = JSON.parse(eventString)
+
 	const params = {
 		SecretId: 'github-token',
 	}

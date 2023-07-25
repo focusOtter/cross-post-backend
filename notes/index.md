@@ -65,3 +65,13 @@ I was curious how to get the previous commit, but [GitHub has a `^` utility](htt
 So it looks like I'll need the [Octokit package](https://www.npmjs.com/package/octokit). I'll use the REST version.
 
 So to put it together, it'll be getting the secret from secrets manaager, then putting that in the Octokit library, from there, calling the `comparCommits` endpoint and manipulating the result to get the file I need
+
+I got a `could not read .split` of undefined. I'm assuming this is because the `event` object is a string.
+
+I renamed the `event` arg to `eventString` and refactored to this:
+
+```ts
+const event = JSON.parse(eventString)
+```
+
+redeployed (I should really enable watch mode for this stuff lol)

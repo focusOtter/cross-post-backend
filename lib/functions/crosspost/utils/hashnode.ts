@@ -34,6 +34,9 @@ export function prepForHashnodePublishing(postWithFrontmatter: string): {
 	content: string
 } {
 	const { data, content, errors } = frontmatter(postWithFrontmatter)
+	if (errors) {
+		throw new Error(errors)
+	}
 
 	const hashnodeContent = replaceShortcodesForHashnode(content)
 

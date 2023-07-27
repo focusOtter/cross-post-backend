@@ -76,14 +76,20 @@ exports.handler = async (event: any) => {
 				prepForHashnodePublishing(mainBlogContent)
 
 			// publish to the respective platforms
+			console.log('preparing to publish')
 			publishToDevTo({
 				frontmatter: devToPublishingContent.frontmatter,
 				content: devToPublishingContent.content,
 			})
+				.then((res) => console.log(res))
+				.catch((err) => console.log(err))
+
 			publishToHashnode({
 				frontmatter: hashnodePublishingContent.frontmatter,
 				content: hashnodePublishingContent.content,
 			})
+				.then((res) => console.log(res))
+				.catch((err) => console.log(err))
 
 			// replace shortcodes with the respective platforms
 

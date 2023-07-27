@@ -55,15 +55,19 @@ export function prepForDevToPublishing(postWithFrontmatter: string): {
 	content: string
 } {
 	const { data, content, errors } = frontmatter(postWithFrontmatter)
-	const devToDate = convertDateFormat(data.date)
-	const devToFrontmatter = {
-		...data,
-		date: devToDate,
+	if (errors.length > 0) {
+		const devToDate = convertDateFormat(data.date)
+		const devToFrontmatter = {
+			...data,
+			date: devToDate,
+		}
+
+		const devToContent = replaceShortcodesForDevTo(content)
+
+		return { frontmatter: devToFrontmatter, content: devToContent }
+	} else {
+		throw new Error(errors)
 	}
-
-	const devToContent = replaceShortcodesForDevTo(content)
-
-	return { frontmatter: devToFrontmatter, content: devToContent }
 }
 
 // Publish to Dev.to

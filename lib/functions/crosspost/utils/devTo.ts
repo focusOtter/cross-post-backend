@@ -54,16 +54,16 @@ export function prepForDevToPublishing(postWithFrontmatter: string): {
 	if (errors.length > 0) {
 		// const devToDate = convertDateFormat(data.date)
 		// console.log('the devToDate', devToDate)
-		// const devToFrontmatter = {
-		// 	...data,
-		// 	date: devToDate,
-		// }
+		const devToFrontmatter = {
+			...data,
+			date: `${data.date}`,
+		}
 
-		console.log('the devfrontmatter', data)
+		console.log('the devfrontmatter', devToFrontmatter)
 
 		const devToContent = replaceShortcodesForDevTo(content)
 
-		return { frontmatter: data, content: devToContent }
+		return { frontmatter: devToFrontmatter, content: devToContent }
 	} else {
 		console.log(errors)
 		throw new Error(errors)

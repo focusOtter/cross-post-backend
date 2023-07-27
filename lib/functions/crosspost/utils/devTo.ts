@@ -24,6 +24,7 @@ export const devToAPIKeyName = 'crosspost-devto-apikey'
 // }
 
 function replaceShortcodesForDevTo(inputString: string) {
+	console.log('in the data replacer')
 	// Replace Twitter shortcodes with Dev.to embeds
 	inputString = inputString.replaceAll(
 		hugoShortcodes.twitterRegex,
@@ -54,14 +55,15 @@ export function prepForDevToPublishing(postWithFrontmatter: string): {
 		console.log(errors)
 		throw new Error(errors)
 	} else {
-		// const devToFrontmatter = {
-		// 	...data,
-		// 	date: `${data.date}`,
-		// }
+		const devToFrontmatter = {
+			...data,
+			date: `${data.date}`,
+		}
 
 		console.log('the devfrontmatter', data)
-
+		console.log('preparing to replace data')
 		const devToContent = replaceShortcodesForDevTo(content)
+		console.log('done replacing data')
 
 		return { frontmatter: data, content: devToContent }
 	}

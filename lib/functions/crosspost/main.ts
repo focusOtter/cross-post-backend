@@ -71,6 +71,8 @@ exports.handler = async (event: any) => {
 
 			// format for the respective platforms
 			const devToPublishingContent = prepForDevToPublishing(mainBlogContent)
+			console.log('the dev publishing content', devToPublishingContent)
+
 			const hashnodePublishingContent =
 				prepForHashnodePublishing(mainBlogContent)
 

@@ -1,4 +1,3 @@
-import { frontmatter } from '@github-docs/frontmatter'
 import * as AWS from 'aws-sdk'
 import { Octokit } from '@octokit/rest'
 import fetch from 'node-fetch'
@@ -7,13 +6,8 @@ import { prepForHashnodePublishing, publishToHashnode } from './utils/hashnode'
 
 const secretsmanager = new AWS.SecretsManager()
 
-//these will be fetched from parameter store
-const devToAPIKey = 'VKLL1r4FtAfPN244XqSiaxK1'
-const hashnodeAPIKey = '9ee89e8a-1683-4298-9870-4828c2d4361f'
-
 exports.handler = async (event: any) => {
 	const eventBody = JSON.parse(event.body)
-	const supportedPlatforms = ['hashnode', 'devTo']
 	// get the github token from secrets manager
 	// in future iterations, the token will not be needed because the frontend will have already pushed to github by fetching the files like so:
 	// octokit.repos.getContent({

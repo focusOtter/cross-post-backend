@@ -1,5 +1,12 @@
 import { frontmatter } from '@github-docs/frontmatter'
-import { hashnodeAPIKey, hugoShortcodes, publishingProps } from './shared'
+import {
+	getSecretFromParameterStore,
+	hugoShortcodes,
+	publishingProps,
+} from './shared'
+
+export const hashnodeAPIKeyName = 'crosspost-hashnode-apikey'
+export const publicationId = '6033e395073b7f6738067ad0'
 
 function replaceShortcodesForHashnode(inputString: string) {
 	// Replace Twitter shortcodes
@@ -33,19 +40,24 @@ export function prepForHashnodePublishing(postWithFrontmatter: string): {
 	return { frontmatter: data, content: hashnodeContent }
 }
 
-export function publishToHashnode({ frontmatter, content }: publishingProps) {
-	return fetch('https://api.hashnode.com', {
+export async function publishToHashnode({
+	frontmatter,
+	content,
+}: publishingProps) {
+	const hashnodeAPIKey = await getSecretFromParameterStore(hashnodeAPIKeyName)
+
+	const res = fetch('https://api.hashnode.com', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: hashnodeAPIKey,
+			Authorization: hashnodeAPIKey as string,
 		},
 		body: JSON.stringify({
 			query:
 				'mutation createStory($input: CreateStoryInput!){ createStory(input: $input){ code success message } }',
 			variables: {
 				input: {
-					isPartOfPublication: { publicationId: '6033e395073b7f6738067ad0' },
+					isPartOfPublication: { publicationId },
 					title: frontmatter.title,
 					subtitle: frontmatter.description,
 					isRepublished: {
@@ -60,31 +72,33 @@ export function publishToHashnode({ frontmatter, content }: publishingProps) {
 				},
 			},
 		}),
-	}).then((res) => res.json())
+	})
+
+	return (await res).json()
 }
 
-const getUserPublicationData = () => {
-	return fetch('https://api.hashnode.com', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: hashnodeAPIKey,
-		},
-		body: JSON.stringify({
-			query: `
-				query getUserPublicationData($username: String!) {
-					user(username: $username) {
-						_id
-					}
-				}
-			`,
-			variables: {
-				username: 'focusotter',
-			},
-		}),
-	}).then((res) => {
-		res.json().then(({ data }) => {
-			console.log(data.user._id)
-		})
-	})
-}
+// const getUserPublicationData = () => {
+// 	return fetch('https://api.hashnode.com', {
+// 		method: 'POST',
+// 		headers: {
+// 			'Content-Type': 'application/json',
+// 			Authorization: hashnodeAPIKey,
+// 		},
+// 		body: JSON.stringify({
+// 			query: `
+// 				query getUserPublicationData($username: String!) {
+// 					user(username: $username) {
+// 						_id
+// 					}
+// 				}
+// 			`,
+// 			variables: {
+// 				username: 'focusotter',
+// 			},
+// 		}),
+// 	}).then((res) => {
+// 		res.json().then(({ data }) => {
+// 			console.log(data.user._id)
+// 		})
+// 	})
+// }

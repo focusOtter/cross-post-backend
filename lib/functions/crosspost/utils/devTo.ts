@@ -1,5 +1,11 @@
 import { frontmatter } from '@github-docs/frontmatter'
-import { devToAPIKey, hugoShortcodes, publishingProps } from './shared'
+import {
+	getSecretFromParameterStore,
+	hugoShortcodes,
+	publishingProps,
+} from './shared'
+
+export const devToAPIKeyName = 'crosspost-devto-apikey'
 
 // this takes in the data.date field in frontmatter and converts it to the desired format
 
@@ -60,13 +66,18 @@ export function prepForDevToPublishing(postWithFrontmatter: string): {
 }
 
 // Publish to Dev.to
-export function publishToDevTo({ frontmatter, content }: publishingProps) {
-	return fetch('https://dev.to/api/articles', {
+export async function publishToDevTo({
+	frontmatter,
+	content,
+}: publishingProps) {
+	const devToAPIKey = await getSecretFromParameterStore(devToAPIKeyName)
+
+	const res = await fetch('https://dev.to/api/articles', {
 		method: 'POST',
 		headers: {
 			accept: 'application/vnd.forem.api-v1+json',
 			'content-type': 'application/json',
-			'api-key': devToAPIKey,
+			'api-key': devToAPIKey as string,
 		},
 		body: JSON.stringify({
 			article: {
@@ -82,5 +93,6 @@ export function publishToDevTo({ frontmatter, content }: publishingProps) {
 				body_markdown: content,
 			},
 		}),
-	}).then((res) => res.json())
+	})
+	return await res.json()
 }

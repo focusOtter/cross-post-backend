@@ -24,9 +24,10 @@ export const createCrossPostFunc = (
 
 	crossPostFunc.addToRolePolicy(
 		new aws_iam.PolicyStatement({
-			actions: ['secretsmanager:GetSecretValue'],
+			actions: ['secretsmanager:GetSecretValue', 'ssm:GetParameter'],
 			resources: [
 				'arn:aws:secretsmanager:us-east-1:842537737558:secret:github-token-tlJVaZ',
+				'arn:aws:ssm:us-east-1:842537737558:parameter/*',
 			],
 		})
 	)

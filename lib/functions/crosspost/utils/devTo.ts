@@ -59,6 +59,7 @@ export function prepForDevToPublishing(postWithFrontmatter: string): {
 	return { frontmatter: devToFrontmatter, content: devToContent }
 }
 
+// Publish to Dev.to
 export function publishToDevTo({ frontmatter, content }: publishingProps) {
 	return fetch('https://dev.to/api/articles', {
 		method: 'POST',

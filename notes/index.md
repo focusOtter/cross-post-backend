@@ -124,4 +124,25 @@ This worked 🎉 and gave me the following:
 
 > 🗒️ Note: At this point, I've used 88mb of my 128mb. With a cold start, this is taking 1209ms with a 568ms init Duration.
 
-makein change
+I tried a lot of different combos to get this to work. In the end, all I had to do was pass
+
+```js
+mediaType: {
+					format: 'raw',
+				},
+```
+
+To the following function to get the actual data back:
+
+```ts
+const getContentReponse: any = await octokit.repos.getContent({
+	owner,
+	repo,
+	mediaType: {
+		format: 'raw',
+	},
+	path: committedFiles[0].filename,
+})
+```
+
+The response has the `status`, `url`, `headers` and `data`. So long as the file is under **1mb**, then the file will be output as a string (of markdown in this case) under `response.data`.

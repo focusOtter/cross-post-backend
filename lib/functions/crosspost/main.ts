@@ -1,15 +1,10 @@
 import * as AWS from 'aws-sdk'
 import { Octokit } from '@octokit/rest'
-import { Endpoints } from '@octokit/types'
-
 import fetch from 'node-fetch'
 
 const secretsmanager = new AWS.SecretsManager()
 
 exports.handler = async (event: any) => {
-	type fetchRepoContentsType =
-		Endpoints['GET /repos/{owner}/{repo}/contents/{path}']['response']
-
 	const eventBody = JSON.parse(event.body)
 	console.log('Processing eventBody: ', eventBody)
 
@@ -50,7 +45,7 @@ exports.handler = async (event: any) => {
 		console.log('Commited files: ', committedFiles)
 
 		try {
-			const getContentReponse: any = await octokit.repos.getContent({
+			const getContentReponse = await octokit.repos.getContent({
 				owner,
 				repo,
 				mediaType: {
@@ -59,17 +54,10 @@ exports.handler = async (event: any) => {
 				path: committedFiles[0].filename,
 			})
 
-			console.log('Get content response: ', getContentReponse)
+			//the changed markdown file:
 
-			console.log('the content response', getContentReponse.data)
-			// if (getContentReponse.data.encoding === 'base64') {
-			// 	const content = Buffer.from(getContentReponse.data, 'base64').toString(
-			// 		'utf8'
-			// 	)
-			// 	console.log(content)
-			// } else {
-			// 	console.log('File content is not in base64 encoding.')
-			// }
+			console.log('the changed markdown file:', getContentReponse.data)
+			const fileContent = getContentReponse.data
 		} catch (err) {
 			console.error(err)
 		}

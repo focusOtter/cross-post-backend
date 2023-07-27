@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Check commit message for "--crosspost"
         run: |
+          cd "${{ github.workspace }}"  # Move to the root of the repository
           COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
           if echo "$COMMIT_MESSAGE" | grep -q -E -- "--crosspost"; then
             echo "Commit message contains '--crosspost'. Invoking Lambda..."

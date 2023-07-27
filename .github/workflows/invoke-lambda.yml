@@ -10,12 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Call endpoint
+      - name: Check commit message for "--crosspost"
         run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d '{
-            "ref": "${{ github.ref }}", 
-            "repo": "${{ github.repository }}", 
-            "commit": "${{ github.event.after }}"
-            }' \
-           ${{ secrets.ENDPOINT }}
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          if echo "$COMMIT_MESSAGE" | grep -q -E -- "--crosspost"; then
+            echo "Commit message contains '--crosspost'. Invoking Lambda..."
+            curl -X POST -H "Content-Type: application/json" \
+              -d '{
+                "ref": "${{ github.ref }}", 
+                "repo": "${{ github.repository }}", 
+                "commit": "${{ github.event.after }}"
+              }' \
+              "${{ secrets.ENDPOINT }}"
+          else
+            echo "Commit message does not contain '--crosspost'. Skipping Lambda invocation."
+            exit 0
+          fi

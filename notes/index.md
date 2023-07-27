@@ -4,8 +4,8 @@
 
 This can basically be split up into 5 main parts:
 
-0. Calling a Lambda from a GitHub action
-1. Getting the markdown file
+0. Calling a Lambda from a GitHub action✅
+1. Getting the markdown file✅
 2. Transforming the markdown file
 3. Cross posting to the relevant platforms
 4. Sending a notification that the files were cross posted
@@ -14,13 +14,13 @@ This can basically be split up into 5 main parts:
 
 The GitHub action isn't actually deploying anything. I just needs to call a Lambda function. I'll do the following steps:
 
-1. Create the lambda function
-2. Add a function URL (include a cfnoutput of the URL)
-3. Create a github action that calls the function
-4. Log out the event of the function
-5. Deploy
-6. Store the secret in GitHub
-7. Test: Commit and Verify
+1. Create the lambda function✅
+2. Add a function URL (include a cfnoutput of the URL)✅
+3. Create a github action that calls the function✅
+4. Log out the event of the function✅
+5. Deploy✅
+6. Store the secret in GitHub✅
+7. Test: Commit and Verify✅
 
 It worked 🎉
 I enhanced the action to pass github details as well:
@@ -146,3 +146,39 @@ const getContentReponse: any = await octokit.repos.getContent({
 ```
 
 The response has the `status`, `url`, `headers` and `data`. So long as the file is under **1mb**, then the file will be output as a string (of markdown in this case) under `response.data`.
+
+## Transforming the markdown file
+
+Now that I have the markdown file, my goal is to transform the markdown file in something that can be sent off to the respective APIs.
+
+This means I have to transfer over the Hugo shortcodes to something that other platforms understand. It also means relative links to my blog should point to blog posts on those respective platforms (this sounds like it's full of edgecases 🤔), and it means possibly removing frontmatter in case the platform doesn't support it.
+
+Allen has the code that does this but I'm going to do thing differently since my profile data isn't coming from DynamoDB (yet) and because I want to understand what is happening, I'm going to do this primarily on my own.
+
+> 🗒️ It was at this point that I decided to 1. Not use Medium because their API has a discliamer that it shoudln't be used. and 2. To not transform links to other blog posts because blog posts may not exist on the other platforms and there are too many edgecases. I'll use this as a way to get customers over to your main blog. So I'm just support the primary blog, hashnode and dev.to at this point.
+
+### Learnings
+
+I spent some time playing around with this and learned the following:
+
+1. For `dev.to` the frontmatter is read and takes prescedence over any API params
+   - The `date` field has to be in the format `2023-07-26T17:45:12Z`
+   - The `series` field can only be a single series string, not an array
+2. For Hashnode, they do not extrapolate frontmatter, this has to be removed before hand.
+   - For tags, use this:
+
+```graphql
+query listTags {
+	tagCategories {
+		_id
+		name
+		slug
+	}
+}
+```
+
+So before uploading, I should:
+
+1. Extract the frontmatter, using the `@github-docs/frontmatter` package (make any changes I need to)
+2. Create a function that transforms the shortcodes to platform specific shortcodes
+3. If the platform expects frontmatter then put it back together, if not, then just send the content

@@ -1,12 +1,26 @@
+import { frontmatter } from '@github-docs/frontmatter'
 import * as AWS from 'aws-sdk'
 import { Octokit } from '@octokit/rest'
 import fetch from 'node-fetch'
+import { prepForDevToPublishing, publishToDevTo } from './utils/devTo'
+import { prepForHashnodePublishing, publishToHashnode } from './utils/hashnode'
 
 const secretsmanager = new AWS.SecretsManager()
 
+//these will be fetched from parameter store
+const devToAPIKey = 'VKLL1r4FtAfPN244XqSiaxK1'
+const hashnodeAPIKey = '9ee89e8a-1683-4298-9870-4828c2d4361f'
+
 exports.handler = async (event: any) => {
 	const eventBody = JSON.parse(event.body)
-	console.log('Processing eventBody: ', eventBody)
+	const supportedPlatforms = ['hashnode', 'devTo']
+	// get the github token from secrets manager
+	// in future iterations, the token will not be needed because the frontend will have already pushed to github by fetching the files like so:
+	// octokit.repos.getContent({
+	// 	owner,
+	// 	repo,
+	// 	path: '',
+	// })
 
 	const params = {
 		SecretId: 'github-token',
@@ -16,6 +30,7 @@ exports.handler = async (event: any) => {
 		const response = await secretsmanager.getSecretValue(params).promise()
 		const secretValue = response.SecretString
 
+		// create an octokit instance with the token
 		const octokit = new Octokit({
 			auth: secretValue,
 			request: {
@@ -29,6 +44,7 @@ exports.handler = async (event: any) => {
 
 		let committedFiles: any[] = []
 
+		// Get the list of files that have been changed since the commit
 		const gitResponse = await octokit.repos.compareCommits({
 			owner,
 			repo,
@@ -36,6 +52,7 @@ exports.handler = async (event: any) => {
 			head: commit,
 		})
 
+		// Filter the list of files to only include markdown files
 		if (gitResponse.data.files) {
 			committedFiles = gitResponse.data.files.filter((file) =>
 				file.filename.includes('.md')
@@ -44,6 +61,7 @@ exports.handler = async (event: any) => {
 
 		console.log('Commited files: ', committedFiles)
 
+		// Get the content of the first file in the list of changed files
 		try {
 			const getContentReponse = await octokit.repos.getContent({
 				owner,
@@ -55,9 +73,27 @@ exports.handler = async (event: any) => {
 			})
 
 			//the changed markdown file:
-
 			console.log('the changed markdown file:', getContentReponse.data)
-			const fileContent = getContentReponse.data
+			const mainBlogContent = getContentReponse.data as unknown as string
+
+			// format for the respective platforms
+			const devToPublishingContent = prepForDevToPublishing(mainBlogContent)
+			const hashnodePublishingContent =
+				prepForHashnodePublishing(mainBlogContent)
+
+			// publish to the respective platforms
+			publishToDevTo({
+				frontmatter: devToPublishingContent.frontmatter,
+				content: devToPublishingContent.content,
+			})
+			publishToHashnode({
+				frontmatter: hashnodePublishingContent.frontmatter,
+				content: hashnodePublishingContent.content,
+			})
+
+			// replace shortcodes with the respective platforms
+
+			//the frontmatter of the changed markdown file:
 		} catch (err) {
 			console.error(err)
 		}

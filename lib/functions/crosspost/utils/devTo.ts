@@ -13,20 +13,13 @@ export const devToAPIKeyName = 'crosspost-devto-apikey'
 function convertDateFormat(date: string) {
 	// Regular expression to match the "YYYY-MM-DD" format
 	const regex = /^\d{4}-\d{2}-\d{2}$/
-
+	const currentTime = new Date().toISOString().split('T')[1]
+	// If the input string matches the "YYYY-MM-DD" format
 	if (regex.test(date)) {
-		const currentDate = new Date().toISOString().split('T')[0]
-		if (currentDate === date) {
-			// If the input string is already in the desired format, return it as is
-			return date
-		} else {
-			// Convert the "YYYY-MM-DD" format to "YYYY-MM-DDTHH:mm:ssZ" format
-			const currentTime = new Date().toISOString().split('T')[1].slice(0, -1)
-			return `${date}T${currentTime}`
-		}
+		// '2023-07-27T17:58:57.117Z'
+		return `${date}T${currentTime}`
 	} else {
-		// If the input string is not in the expected format, return null or throw an error as desired
-		return null
+		return date
 	}
 }
 
@@ -66,6 +59,7 @@ export function prepForDevToPublishing(postWithFrontmatter: string): {
 
 		return { frontmatter: devToFrontmatter, content: devToContent }
 	} else {
+		console.log(errors)
 		throw new Error(errors)
 	}
 }

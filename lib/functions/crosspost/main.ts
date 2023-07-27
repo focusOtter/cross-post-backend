@@ -67,7 +67,6 @@ exports.handler = async (event: any) => {
 			})
 
 			//the changed markdown file:
-			console.log('the changed markdown file:', getContentReponse.data)
 			const mainBlogContent = getContentReponse.data as unknown as string
 
 			// format for the respective platforms

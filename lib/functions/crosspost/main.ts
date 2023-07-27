@@ -78,14 +78,14 @@ exports.handler = async (event: any) => {
 
 			// publish to the respective platforms
 			console.log('preparing to publish')
-			publishToDevTo({
+			await publishToDevTo({
 				frontmatter: devToPublishingContent.frontmatter,
 				content: devToPublishingContent.content,
 			})
 				.then((res) => console.log(res))
 				.catch((err) => console.log(err))
 
-			publishToHashnode({
+			await publishToHashnode({
 				frontmatter: hashnodePublishingContent.frontmatter,
 				content: hashnodePublishingContent.content,
 			})

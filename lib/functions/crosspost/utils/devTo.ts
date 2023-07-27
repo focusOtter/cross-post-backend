@@ -60,12 +60,12 @@ export function prepForDevToPublishing(postWithFrontmatter: string): {
 			date: `${data.date}`,
 		}
 
-		console.log('the devfrontmatter', data)
+		console.log('the devfrontmatter', devToFrontmatter)
 		console.log('preparing to replace data')
 		const devToContent = replaceShortcodesForDevTo(content)
 		console.log('done replacing data')
 
-		return { frontmatter: data, content: devToContent }
+		return { frontmatter: devToFrontmatter, content: devToContent }
 	}
 }
 

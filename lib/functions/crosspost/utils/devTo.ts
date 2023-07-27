@@ -76,6 +76,8 @@ export async function publishToDevTo({
 		body: JSON.stringify({
 			article: {
 				title: frontmatter.title,
+				body_markdown: content,
+				description: frontmatter.description,
 				published: false,
 				series: 'my-series, other series',
 				main_image: frontmatter.image,
@@ -84,8 +86,6 @@ export async function publishToDevTo({
 					.split(' ')
 					.join('-'),
 			},
-			description: frontmatter.description,
-			body_markdown: content,
 		}),
 	})
 

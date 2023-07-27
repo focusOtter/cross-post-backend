@@ -1,4 +1,5 @@
-import { frontmatter } from '@github-docs/frontmatter'
+const frontmatter = require('@github-docs/frontmatter')
+
 import {
 	getSecretFromParameterStore,
 	hugoShortcodes,

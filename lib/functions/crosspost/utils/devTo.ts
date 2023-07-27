@@ -79,14 +79,15 @@ export async function publishToDevTo({
 				published: false,
 				series: 'my-series, other series',
 				main_image: frontmatter.image,
-				canonical_url: `https://focusotter.cloud/posts/${frontmatter.slug
-					.toLowercase()
+				canonical_url: `https://focusotter.cloud/posts/${frontmatter.slug}`
+					.toLowerCase()
 					.split(' ')
-					.join('-')}`,
-				description: frontmatter.description,
-				body_markdown: content,
+					.join('-'),
 			},
+			description: frontmatter.description,
+			body_markdown: content,
 		}),
 	})
+
 	return await res.json()
 }

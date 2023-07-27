@@ -66,10 +66,11 @@ export async function publishToHashnode({
 					title: frontmatter.title,
 					subtitle: frontmatter.description,
 					isRepublished: {
-						originalArticleURL: `https://focusotter.cloud/posts/${frontmatter.slug
-							.toLowercase()
-							.split(' ')
-							.join('-')}`,
+						originalArticleURL:
+							`https://focusotter.cloud/posts/${frontmatter.slug}`
+								.toLowerCase()
+								.split(' ')
+								.join('-'),
 					},
 					contentMarkdown: content,
 					tags: [],

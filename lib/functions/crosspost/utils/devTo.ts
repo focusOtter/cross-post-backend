@@ -51,22 +51,11 @@ export function prepForDevToPublishing(postWithFrontmatter: string): {
 	const { data, content, errors } = frontmatter(postWithFrontmatter)
 	console.log('the data', data)
 	console.log('the rrors', errors)
-	if (errors.length > 0) {
-		console.log(errors)
-		throw new Error(errors)
-	} else {
-		const devToFrontmatter = {
-			...data,
-			date: `${data.date}`,
-		}
 
-		console.log('the devfrontmatter', devToFrontmatter)
-		console.log('preparing to replace data')
-		const devToContent = replaceShortcodesForDevTo(content)
-		console.log('done replacing data')
+	const devToContent = replaceShortcodesForDevTo(content)
+	console.log('done replacing data')
 
-		return { frontmatter: devToFrontmatter, content: devToContent }
-	}
+	return { frontmatter: data, content: devToContent }
 }
 
 // Publish to Dev.to

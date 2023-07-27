@@ -1,4 +1,5 @@
 const frontmatter = require('@github-docs/frontmatter')
+import fetch from 'node-fetch'
 
 import {
 	getSecretFromParameterStore,

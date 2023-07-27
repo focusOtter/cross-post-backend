@@ -34,7 +34,7 @@ export function prepForHashnodePublishing(postWithFrontmatter: string): {
 	content: string
 } {
 	const { data, content, errors } = frontmatter(postWithFrontmatter)
-	if (errors) {
+	if (errors.length > 0) {
 		throw new Error(errors)
 	}
 

@@ -1,4 +1,4 @@
-import { CfnOutput } from 'aws-cdk-lib'
+import { CfnOutput, Duration } from 'aws-cdk-lib'
 import * as aws_iam from 'aws-cdk-lib/aws-iam'
 import { FunctionUrlAuthType, Runtime } from 'aws-cdk-lib/aws-lambda'
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
@@ -16,6 +16,7 @@ export const createCrossPostFunc = (
 		runtime: Runtime.NODEJS_16_X,
 		handler: 'handler',
 		entry: path.join(__dirname, `./main.ts`),
+		timeout: Duration.seconds(10),
 	})
 
 	const fURLItem = crossPostFunc.addFunctionUrl({

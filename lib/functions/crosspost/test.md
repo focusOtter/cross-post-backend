@@ -1,7 +1,7 @@
 ---
 title: Build Faster & Easier APIs With User Sessions
 description: I've been building APIs for years, but recently discovered the power of inferring data from user sessions for a better developer experience.
-date: 20190701T10:00Z
+date: 2023-07-27
 categories:
   - application development
 tags:
